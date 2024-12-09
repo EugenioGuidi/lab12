@@ -1,27 +1,22 @@
 package it.unibo.es1;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class LogicsImpl implements Logics {
 
-	private int size;
 	private final List<Integer> listInteger;
-	private final List<Boolean> listBoolean;
 
 	public LogicsImpl(final int size) {
-		this.size = size;
-		this.listInteger = new ArrayList<>();
-		this.listBoolean = new ArrayList<>();
-		for (int i = 0; i < size; i++) {
-			listBoolean.add(true);
-			listInteger.add(0);
-		}
+		this.listInteger = IntStream.range(0, size)
+								.mapToObj(i -> 0)
+								.collect(Collectors.toList());
 	}
 
 	@Override
 	public int size() {
-		return this.size;
+		return this.listInteger.size();
 	}
 
 	@Override
@@ -31,41 +26,32 @@ public class LogicsImpl implements Logics {
 
 	@Override
 	public List<Boolean> enablings() {
-		return this.listBoolean;
+		return this.listInteger
+					.stream()
+					.map(i -> i.equals(this.listInteger.size()) ? false : true)
+					.toList();
 	}
 
 	@Override
 	public int hit(int elem) {
-		if (this.listBoolean.get(elem)) {
-			this.listInteger.set(elem, this.listInteger.get(elem) + 1);
-		}
-		if (this.listInteger.get(elem) == this.size) {
-			this.listBoolean.set(elem, false);
-		}
-		return this.listInteger.get(elem);
+		return this.listInteger
+					.set(elem, this.listInteger.get(elem) + 1) + 1;
 	}
 
 	@Override
 	public String result() {
-		String string = "<<";
-		for(int i = 0; i < size; i++) {
-			string = string + listInteger.get(i);
-			if (i != size - 1) {
-				string = string + "|";
-			}
-		}
-		string = string + ">>";
-		return string;
+		return listInteger
+					.stream()
+					.map(String::valueOf)
+					.collect(Collectors.joining("|", "<<", ">>"));
 	}
 
 	@Override
 	public boolean toQuit() {
-		boolean flag = true;
-		for(Integer integer : this.listInteger) {
-			if(!listInteger.get(0).equals(integer)) {
-				flag = false;
-			}
-		}
-		return flag;
+
+		return this.listInteger
+					.stream()
+					.allMatch(i -> i.equals(this.listInteger.get(0)))
+					;
 	}
 }
