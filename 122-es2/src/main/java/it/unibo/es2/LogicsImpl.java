@@ -1,7 +1,5 @@
 package it.unibo.es2;
 
-import java.util.List;
-
 public class LogicsImpl implements Logics{
 
     private final int[][] matrix;
@@ -11,39 +9,45 @@ public class LogicsImpl implements Logics{
     }
 
     @Override
-    public int size() {
-        // per ora lo lascio vuoto
-        throw new UnsupportedOperationException("Unimplemented method 'size'");
-    }
-
-    @Override
-    public List<Integer> values() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'values'");
-    }
-
-    @Override
-    public List<Boolean> enablings() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enablings'");
-    }
-
-    @Override
-    public int hit(int elem) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'hit'");
-    }
-
-    @Override
-    public String result() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'result'");
+    public String hit(final Pair<Integer,Integer> pair) {
+        final int row = pair.getX();
+        final int col = pair.getY();
+        if (this.matrix[row][col] == 0) {
+            this.matrix[row][col] = 1;
+            return "*";
+        } else {
+            this.matrix[row][col] = 0;
+            return " ";
+        }
     }
 
     @Override
     public boolean toQuit() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'toQuit'");
+        boolean condition = true;
+        for (int i = 0; i < this.matrix.length; i++) {
+            condition = true;
+            for (int j = 0; j < this.matrix[0].length; j++) {
+                if(this.matrix[i][j] == 0) {
+                    condition = false;
+                }
+            }
+            if(condition == true) {
+                return true;
+            }
+        }
+        condition = true;
+        for (int i = 0; i < this.matrix[0].length; i++) {
+            condition = true;
+            for (int j = 0; j < this.matrix.length; j++) {
+                if(this.matrix[j][i] == 0) {
+                    condition = false;
+                }
+            }
+            if(condition == true) {
+                return true;
+            }
+        }
+        return false;
     }
     
 }
